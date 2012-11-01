@@ -1,0 +1,2 @@
+export(qualStudy, qualSample, toSnageeFormat);
+import(SNAGEEdata);

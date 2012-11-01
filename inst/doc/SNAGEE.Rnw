@@ -1,0 +1,150 @@
+%\VignetteIndexEntry{SNAGEE Vignette}
+%\VignetteDepends{SNAGEE, SNAGEEdata, ALL, hgu95av2.db}
+%\VignetteKeywords{SNAGEE, gene expression, quality}
+%\VignettePackage{SNAGEE}
+\documentclass{article}
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rcode}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textsf{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+\newcommand{\SNAGEE}{\Rpackage{SNAGEE}}
+\newcommand{\SNAGEEdata}{\Rpackage{SNAGEEdata}}
+\newcommand{\impute}{\Rpackage{impute}}
+
+\usepackage{graphicx}
+\usepackage{Sweave}
+
+\begin{document}
+\title{An Introduction to the SNAGEE Package}
+\date{September, 2012}
+\author{David Venet}
+\maketitle
+
+<<setup, echo=FALSE, results=hide>>=
+options(width=60)
+options(continue=" ")
+options(prompt="R> ")
+@ 
+
+\section{Introduction}
+
+The \SNAGEE package is designed to estimate studies and samples signal-to-noise ratios for gene expression data.
+Those SNRs are related to the statistical strength of the biological
+conclusions the data support, and so can be used as a proxy for study and sample quality.
+
+As microarray studies can be used to answer many biological questions, possibly unrelated to the ones treated in
+the original study, the strength of the biological signal is not determined based on sample annotations,
+but directly using the values of the microarray experiments.
+Whether SNR is a reliable estimate of data quality, in the sense of well-made experiments, depends on the study type.
+The signal-to-noise ratio depends not only on the amount of noise, which could be seen as a direct measure of quality,
+but also on the amount of signal.
+For instance, a high-quality study comparing a cell line in two different conditions could have very little variability, and
+so a low SNR.                                                                                     
+However, we have shown \cite{snagee} that SNR is a good proxy of quality for studies that comprise a large number of diverse samples,
+like for instance large studies on cancer tissues, and can reliably be used to rate comparable studies.
+It can also be used to flag problematic samples inside a study.
+
+\SNAGEE estimates SNR using correlations of gene-gene correlations.
+It has been shown \cite{Lee:2004zl} that gene-gene correlations are not random,
+but that sets of genes are often found to be similarly correlated across different studies
+and biological conditions.
+This can be expressed by saying that the gene-gene correlation matrix has a certain
+distribution, with some genes likely to be correlated while others are not.
+\SNAGEE uses the distribution of the gene correlations as 
+the basis of an SNR measure for all studies and platforms.
+The distribution of the gene correlations is estimated by using
+a large number of studies and platforms.
+The SNR of a study is obtained by comparing its gene correlations to the expected gene correlations.
+The SNR of individual samples is assessed by observing the difference in the SNR of the study
+they are part of when they are removed.
+The sample SNR is a measure of the relative contribution by a sample to the signal and noise of its study, so
+it is not a ratio, but we still use the term signal-to-noise ratio as it conveys the idea behind the measure.
+
+\SNAGEE estimates the study SNR direcly using the gene measurments, which has many advantages compared to
+existing quality measures techniques:
+it is based on a biologically meaningful 
+concept, it works across studies, protocols and platforms, it can be applied to both studies and samples,
+it is sensitive to probe misannotation,
+it does not require access to the raw files, and it is fully automated.
+
+Gene-gene correlation matrices calculated on many studies are available in \SNAGEEdata,
+which should be installed alongside \SNAGEE. 
+\SNAGEE can be used for any platform and does not use platform-specific information, nor
+usual quality metrics. The only requirement is that the probes are mapped to gene IDs.
+
+This vignette is intended to give a quick glance of the most useful tools.
+A more detailed help can be obtained with \Rcode{help(SNAGEE)} after loading the library.
+
+\section{Study SNR}
+
+This section details the calculation of the SNR of the study in the data package \Rpackage{ALL}.
+This is a study of 128 samples on the Affymetrix U95A platform.
+The SNR of a study is based on the correlation between its gene-gene correlation matrix and the
+expected matrix, and so is a number between -1 and 1. Practically, numbers near or below 0 are symptomatic
+of seriously problematic studies (e.g. gene annotation problems, serious normalization issues).
+Numbers around 20-30\% are average, depending on the platform.
+For instance, primary Affymetrix platforms (e.g. U133A) have usually higher SNRs, while
+secondary Affymterix platforms (e.g. U133B) are usually poorer.
+
+<<>>=
+library(SNAGEE)
+library(ALL)
+data(ALL)
+@
+
+And now the quality of the study can be calculated:
+<<>>=
+q = qualStudy(ALL)
+print(q)
+@
+\Sexpr{round(q*100)}\% is about average for a U95A study.
+
+\section{Sample SNRs}
+\SNAGEE can also be used to determine the relative SNRs of samples inside a study.
+Contrary to the study SNR, the data cannot contain NAs. It is possible to use the \impute package
+for instance to remove them.
+The calculation is longer, but can be parallelized using the
+\Rpackage{multicore} package.
+
+Sample SNRs are obtained by comparing the SNR of their study with and without that sample.
+Those SNR differences are renormalized by dividing them by their median absolute deviation (mad in R),
+so that SNRs below -3 could be considered as slightly suspicious, and below -5 as seriously 
+suspicious. Sample SNRs are relative to their study, so a very problematic study could have no 
+particularly suspicious samples---they could all be equally bad. Similarly, a suspicious sample in 
+a high-quality study could still be better than an average sample in a low-quality study.
+
+Calculation of the SNRs of samples is straightforward:
+<<>>=
+qs = qualSample(ALL, multicore=FALSE)
+sum(qs < -5)
+@
+\Sexpr{sum(qs < -5)} samples may have quality problems.
+This is quite large for a study with \Sexpr{ncol(ALL)} samples.
+
+
+\section{Details}
+
+This document was written using:
+
+<<>>=
+sessionInfo()
+@ 
+
+\begin{thebibliography}{9}
+
+\bibitem{snagee}
+  David Venet, Vincent Detours, Hugues Bersini
+  \emph{A measure of the signal-to-noise of microarray samples and studies using gene correlations.}
+  Submitted,
+  2012.
+  
+\bibitem{Lee:2004zl}
+ Lee, Homin K, Hsu, Amy K, Sajdak, Jon, Qin, Jie, Pavlidis, Paul
+  Genome Res, 6, 1085--1094, 2004.
+	
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,17 @@
+Package: SNAGEE
+Version: 0.99.0
+Date: 2012-01-26
+Title: Signal-to-Noise applied to Gene Expression Experiments
+Author: David Venet <davenet@ulb.ac.be>
+Maintainer: David Venet <davenet@ulb.ac.be>
+Depends: R (>= 2.6.0), SNAGEEdata
+Suggests: ALL, hgu95av2.db
+Enhances: multicore
+Description: Signal-to-Noise applied to Gene Expression Experiments.
+    Signal-to-noise ratios can be used as a proxy for quality of gene expression studies and samples.
+    The SNRs can be calculated on any gene expression data set as long as gene IDs are available, no
+    access to the raw data files is necessary. This allows to flag problematic studies and samples in any
+    public data set.
+License: Artistic-2.0
+biocViews: Microarray, OneChannel, TwoChannel, QualityControl
+URL: http://fleming.ulb.ac.be/SNAGEE
