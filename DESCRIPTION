@@ -1,6 +1,6 @@
 Package: SNAGEE
-Version: 0.99.0
-Date: 2012-01-26
+Version: 0.99.1
+Date: 2012-11-26
 Title: Signal-to-Noise applied to Gene Expression Experiments
 Author: David Venet <davenet@ulb.ac.be>
 Maintainer: David Venet <davenet@ulb.ac.be>
@@ -14,4 +14,4 @@ Description: Signal-to-Noise applied to Gene Expression Experiments.
     public data set.
 License: Artistic-2.0
 biocViews: Microarray, OneChannel, TwoChannel, QualityControl
-URL: http://fleming.ulb.ac.be/SNAGEE
+URL: http://bioconductor.org/

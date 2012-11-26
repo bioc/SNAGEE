@@ -19,7 +19,7 @@
 
 \begin{document}
 \title{An Introduction to the SNAGEE Package}
-\date{September, 2012}
+\date{November, 2012}
 \author{David Venet}
 \maketitle
 
@@ -138,7 +138,7 @@ sessionInfo()
 \bibitem{snagee}
   David Venet, Vincent Detours, Hugues Bersini
   \emph{A measure of the signal-to-noise of microarray samples and studies using gene correlations.}
-  Submitted,
+  PLoS One,
   2012.
   
 \bibitem{Lee:2004zl}
