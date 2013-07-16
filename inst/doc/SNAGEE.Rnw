@@ -107,7 +107,7 @@ print(q)
 Contrary to the study SNR, the data cannot contain NAs. It is possible to use the \impute package
 for instance to remove them.
 The calculation is longer, but can be parallelized using the
-\Rpackage{multicore} package.
+\Rpackage{parallel} package.
 
 Sample SNRs are obtained by comparing the SNR of their study with and without that sample.
 Those SNR differences are renormalized by dividing them by their median absolute deviation (mad in R),

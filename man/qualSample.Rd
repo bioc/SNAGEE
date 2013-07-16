@@ -16,7 +16,7 @@ qualSample(data,mode="complete",cc=NULL,multicore=FALSE)
 	\item{cc}{Can be used if wishing to use a custom gene-gene correlation matrix.
 		Must be a list with fields 'g' containing the gene IDs and 'cc' containing the
 		 (upper triangular part of the) correlations. }
-	\item{multicore}{Should the parallel version be used? This is based on the multicore package,
+	\item{multicore}{Should the parallel version be used? This is based on the parallel package,
 		if that package cannot be loaded it will fall back on single core, with a warning.}
 }
 \details{

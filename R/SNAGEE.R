@@ -24,8 +24,8 @@ qualStudy = function(d,mode="complete",cc=NULL,disattenuate=TRUE)
 }
 
 qualSample = function(data, mode="complete", cc=NULL, multicore=FALSE)
-{	if (multicore && !require("multicore"))
-	{ warning("multicore not installed. Using only one core.\n"); multicore=FALSE; }
+{	if (multicore && !require("parallel"))
+	{ warning("parallel not installed. Using only one core.\n"); multicore=FALSE; }
 	
 	data=toSnageeFormat(data);
 	

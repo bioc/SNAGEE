@@ -16,7 +16,7 @@ Date: \tab 2012-01-26\cr
 Depends: \tab R (>= 2.6.0)\cr
 Imports: \tab SNAGEEdata\cr
 Suggests: \tab ALL\cr 
-Enhances: \tab multicore\cr
+Enhances: \tab parallel\cr
 License: \tab Artistic-2.0\cr
 URL: \tab http://fleming.ulb.ac.be/SNAGEE\cr
 }
